@@ -2,14 +2,14 @@
 
 namespace steveO{
 
+
 	imu::imu(const char* device): i2c(device) {
 		init();
  		printf("Device ON\n\n");
 
 	}
-	
-	//get accelorometer and gyroscope address
-	
+
+
 	int imu::whoAmI(){
 		uint8_t address=readByte(IMU_ADD, IMU_WHO_AM_I);
 		printf("MPU9250 address = %X\n\n", address);
@@ -31,7 +31,7 @@ namespace steveO{
 			
 			if(dt<=5.0){
 				readGyro(), readAccel();
-				gx_total += gyro.wx, gy_total += gyro.wy, gz_total += gyro.wz;
+				gx_total += gyro.wx.deg, gy_total += gyro.wy.deg, gz_total += gyro.wz.deg;
 				ax_total += accel.x, ay_total += accel.y, az_total += accel.z;
 			} else{
 				gyro.x_offset=gx_total/count, gyro.y_offset=gy_total/count, gyro.z_offset=gz_total/count;
@@ -83,6 +83,7 @@ namespace steveO{
 	imu::~imu(){}
 	
 }
+
 
 int main(void){
 	char dev[] = "/dev/i2c-1";	
