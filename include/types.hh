@@ -13,12 +13,12 @@ namespace steveO{
 		
 		angularVel wx, wy, wz;
 		double x_offset, y_offset, z_offset;
-	}; gyroStream gyro;
+	}; 
 	
 	struct accelStream{
 		double x, y, z;
 		double x_offset, y_offset, z_offset;
-	}; accelStream accel;
+	}; 
 	
 }
 

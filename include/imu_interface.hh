@@ -27,6 +27,8 @@ namespace steveO{
 			int readAccel();
 			int whoAmI();
 			
+			gyroStream gyro;
+			accelStream accel;
 			double gyro_offset;
 
 		private:

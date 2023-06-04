@@ -80,7 +80,7 @@ namespace steveO{
 		printf("Accelerometer Data: %f, %f, %f\n\n", accel.x, accel.y, accel.z);
 	}
 		
-	imu::~imu(){}
+	imu::~imu(){ close(fd); }
 	
 }
 
