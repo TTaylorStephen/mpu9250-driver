@@ -75,7 +75,4 @@
 #define AK_ASAZ 0x12
 #define SMPLRT_DIV 0x19
 
-#define MFS_14BITS 0
-#define MFS_16BITS 1
-
 #endif

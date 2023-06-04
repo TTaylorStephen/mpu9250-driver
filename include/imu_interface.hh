@@ -2,16 +2,10 @@
 #define IMU_INTERFACE_HH
 
 #include <chrono>
-
 #include "i2c_interface.hh"
 #include "register_map.hh"
 #include "constant.hh"
 #include "types.hh"
-
-
-#define GRAVITY 9.80665
-#define PI 3.14159265359
-
 
 namespace steveO{
 	
@@ -20,16 +14,14 @@ namespace steveO{
 		
 		public:
 			imu(const char* device);
-			~imu();
-			double setRefs();
+			double getScales();
 			int mpuGetBias();
 			int readGyro();
 			int readAccel();
 			int whoAmI();
-			
 			gyroStream gyro;
 			accelStream accel;
-			double gyro_offset;
+			magStream mag;
 
 		private:
 			imu(const imu& dev);

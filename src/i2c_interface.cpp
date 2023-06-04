@@ -5,6 +5,7 @@ namespace steveO{
 
 	i2c::i2c(const char* device): dev(device){};
 	
+	i2c::~i2c(){close(fd);}
 
 	int i2c::init_i2c_device(){
 		if((fd = open(dev, O_RDWR))<0){ perror("Failed to open the i2c bus"); return -1; }
@@ -55,5 +56,5 @@ namespace steveO{
 		return 0;	
 	}
 
-	
+
 }
