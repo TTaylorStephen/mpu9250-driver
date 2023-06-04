@@ -1,5 +1,5 @@
-#ifndef I2C_DRIVER_HH
-#define I2C_DRIVER_HH
+#ifndef I2C_INTERFACE_HH
+#define I2C_INTERFACE_HH
 
 #include <iostream>
 #include <linux/i2c-dev.h>
@@ -15,7 +15,7 @@ namespace steveO{
 
 		public:
 			i2c(const char* device);
-			int init();
+			int init_i2c_device();
 			int readByte(uint8_t dev_add, uint8_t reg_add);
 			int readBytes(uint8_t dev_add, uint8_t reg_add, uint8_t num_bytes, uint8_t * buf);
 			
@@ -27,7 +27,6 @@ namespace steveO{
 			i2c& operator=(const i2c& dev);	
 		
 	};
-
 }
 
 #endif

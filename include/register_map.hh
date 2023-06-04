@@ -75,15 +75,6 @@
 #define AK_ASAZ 0x12
 #define SMPLRT_DIV 0x19
 
-
-#define AFS_2G 0
-#define AFS_4G 1
-#define AFS_8G 2
-#define AFS_16G 3
-#define GFS_250DPS 0
-#define GFS_500DPS 1
-#define GFS_1000DPS 2
-#define GFS_2000DPS 3
 #define MFS_14BITS 0
 #define MFS_16BITS 1
 

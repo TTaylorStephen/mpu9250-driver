@@ -4,9 +4,10 @@ namespace steveO{
 
 
 	imu::imu(const char* device): i2c(device) {
-		init();
+		init_i2c_device();
+		setRefs();
+		mpuGetBias();
  		printf("Device ON\n\n");
-
 	}
 
 
@@ -16,9 +17,8 @@ namespace steveO{
 		return address;
 	}
 	
-	
+
 	int imu::mpuGetBias(){
-	
 		double gx_total=0, gy_total=0, gz_total=0;
 		double ax_total=0, ay_total=0, az_total=0;
 		double count=0;
@@ -35,7 +35,7 @@ namespace steveO{
 				ax_total += accel.x, ay_total += accel.y, az_total += accel.z;
 			} else{
 				gyro.x_offset=gx_total/count, gyro.y_offset=gy_total/count, gyro.z_offset=gz_total/count;
-				accel.x_offset=ax_total/count, accel.y_offset=ay_total/count, accel.z_offset=az_total/count;				
+				accel.x_offset=ax_total/count, accel.y_offset=ay_total/count, accel.z_offset=(az_total/count)-1;				
 				printf("Average Gyroscope Values: %f, %f, %f\n\n", gyro.x_offset, gyro.y_offset, gyro.z_offset);
 				printf("Average Accelerometer Values: %f, %f, %f\n\n", accel.x_offset, accel.y_offset, accel.z_offset);
 				sleep(1);
@@ -44,8 +44,7 @@ namespace steveO{
 			count+=1;
 		}
 	}
-	
-	
+		
 
 	int imu::readGyro(){
 		uint8_t buff[6]={0};
@@ -55,12 +54,12 @@ namespace steveO{
 		data[0]=(((int16_t)buff[0] << 8) | buff[1]);
 		data[1]=(((int16_t)buff[2] << 8) | buff[3]);
 		data[2]=(((int16_t)buff[4] << 8) | buff[5]);
-		
-		gyro.wx.deg=((float)data[0]/GYRO_SENSITIVITY)-gyro.x_offset;
-		gyro.wy.deg=((float)data[1]/GYRO_SENSITIVITY)-gyro.y_offset;
-		gyro.wz.deg=((float)data[2]/GYRO_SENSITIVITY)-gyro.z_offset;
+
+		gyro.wx.deg=(data[0]*GYRO_RESOLUTION)-gyro.x_offset;
+		gyro.wy.deg=(data[1]*GYRO_RESOLUTION)-gyro.y_offset;
+		gyro.wz.deg=(data[2]*GYRO_RESOLUTION)-gyro.z_offset;
 	
-		printf("Gyroscope Data: %f, %f, %f\n\n", gyro.wx.deg, gyro.wx.deg, gyro.wx.deg);
+		printf("Gyroscope Data: %f, %f, %f\n\n", gyro.wx.deg, gyro.wy.deg, gyro.wz.deg);
 	}
 	
 	
@@ -72,15 +71,32 @@ namespace steveO{
 		data[0]=(((int16_t)buff[0] << 8) | buff[1]);
 		data[1]=(((int16_t)buff[2] << 8) | buff[3]);
 		data[2]=(((int16_t)buff[4] << 8) | buff[5]);
-		
-		accel.x=(data[0]*GRAVITY/16384)-accel.x_offset;
-		accel.y=(data[1]*GRAVITY/16384)-accel.y_offset;
-		accel.z=(data[2]*GRAVITY/16384)-accel.z_offset;
+	
+		accel.x=(data[0]*ACCEL_RESOLUTION)-accel.x_offset;
+		accel.y=(data[1]*ACCEL_RESOLUTION)-accel.y_offset;
+		accel.z=(data[2]*ACCEL_RESOLUTION)-accel.z_offset;
 	
 		printf("Accelerometer Data: %f, %f, %f\n\n", accel.x, accel.y, accel.z);
 	}
 		
+
+	
+	//get resolution for accerometer - possible option +-2G, 4G, 8G, 16G for 16 bit FS reading
+	//returns value in G's
+	double imu::setRefs(){
+		accel.resolution._2G = 2.0/FS_RANGE; 
+		accel.resolution._4G = 4.0/FS_RANGE; 
+		accel.resolution._8G = 8.0/FS_RANGE; 
+		accel.resolution._16G = 16.0/FS_RANGE; 
+		gyro.resolution._250DPS = 250.0/FS_RANGE;
+		gyro.resolution._500DPS = 500.0/FS_RANGE;
+		gyro.resolution._1000DPS = 1000.0/FS_RANGE;
+		gyro.resolution._2000DPS = 2000.0/FS_RANGE;
+	}	
+	
+
 	imu::~imu(){ close(fd); }
+	
 	
 }
 
@@ -89,11 +105,9 @@ int main(void){
 	char dev[] = "/dev/i2c-1";	
 	steveO::imu mpu9250(dev);
 	
-	mpu9250.mpuGetBias();
 	while(true){
 		//mpu9250.whoAmI();
-		//sleep(1);
-		//mpu9250.readGyro();
+		mpu9250.readGyro();
 		mpu9250.readAccel();
 	}
 	

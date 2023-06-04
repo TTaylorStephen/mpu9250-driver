@@ -3,7 +3,7 @@
 
 #include <chrono>
 
-#include "i2c_driver.hh"
+#include "i2c_interface.hh"
 #include "register_map.hh"
 #include "constant.hh"
 #include "types.hh"
@@ -21,7 +21,7 @@ namespace steveO{
 		public:
 			imu(const char* device);
 			~imu();
-			
+			double setRefs();
 			int mpuGetBias();
 			int readGyro();
 			int readAccel();
