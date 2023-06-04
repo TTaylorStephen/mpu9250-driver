@@ -4,8 +4,10 @@
 - Current functionality includes: reading/calibrating gyroscope + accelerometer data
 
 
-to build:
+To build:
 ```
+    cd ~/ && git clone git@github.com:TTaylorStephen/mpu9250Driver.git
+    cd mpu9250Driver
     mkdir build
     cd build
     cmake .. && make
