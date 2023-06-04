@@ -1,0 +1,4 @@
+#define GYRO_SENSITIVITY 131
+#define GRAVITY 9.80665
+#define PI 3.14159265359
+
